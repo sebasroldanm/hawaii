@@ -8,18 +8,34 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Order extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['table_id', 'name', 'is_paid'];
-    protected $casts = ['is_paid' => 'boolean'];
+
+    protected $fillable = [
+        'table_id', 'name', 'status', 'is_paid', 'started_at', 'completed_at',
+    ];
+
+    protected $casts = [
+        'is_paid' => 'boolean',
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+    ];
+
     public function table()
     {
         return $this->belongsTo(Table::class);
     }
-    public function details()
+
+    public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
     }
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function history()
+    {
+        return $this->hasMany(OrderTableHistory::class);
     }
 }

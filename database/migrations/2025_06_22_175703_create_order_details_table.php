@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders');
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity');
             $table->float('unit_price');
             $table->integer('estimated_delivery_time')->nullable();
-            $table->string('state');
+            $table->string('state')->default('queued');
             $table->dateTime('started_at')->nullable();
             $table->dateTime('completed_at')->nullable();
+            $table->string('note')->nullable();
+            $table->string('customer_label')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

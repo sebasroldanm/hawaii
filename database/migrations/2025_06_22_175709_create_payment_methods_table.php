@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->constrained('product_categories')->onDelete('set null');
             $table->string('name');
-            $table->float('price');
-            $table->boolean('is_in_stock')->default(true);
-            $table->string('category');
-            $table->boolean('is_composite')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('payment_methods');
     }
 };

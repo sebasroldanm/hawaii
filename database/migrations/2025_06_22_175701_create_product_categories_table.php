@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_details', function (Blueprint $table) {
+        Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_id')->constrained('payments');
-            $table->foreignId('order_detail_id')->constrained('order_details');
-            $table->float('amount');
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_details');
+        Schema::dropIfExists('product_categories');
     }
 };

@@ -8,12 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Payment extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['order_id', 'payment_method', 'amount', 'receipt'];
-    protected $casts = ['amount' => 'float'];
+
+    protected $fillable = [
+        'order_id', 'amount', 'receipt',
+    ];
+
+    protected $casts = [
+        'amount' => 'float',
+    ];
+
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
+
     public function details()
     {
         return $this->hasMany(PaymentDetail::class);
