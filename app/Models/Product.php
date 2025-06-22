@@ -8,15 +8,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'price', 'is_in_stock', 'category', 'is_composite'];
-    protected $casts = ['price' => 'float', 'is_in_stock' => 'boolean', 'is_composite' => 'boolean'];
+
+    protected $fillable = [
+        'name',
+        'price',
+        'is_in_stock',
+        'category_id',
+        'is_composite'
+    ];
+
+    protected $casts = [
+        'price' => 'float',
+        'is_in_stock' => 'boolean',
+        'is_composite' => 'boolean',
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class);
+    }
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
     }
+
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class, 'recipes', 'composite_id', 'ingredient_id')
-            ->withPivot('quantity');
+        return $this->belongsToMany(
+            Ingredient::class,
+            'recipes',
+            'composite_id',
+            'ingredient_id'
+        )->withPivot('quantity');
     }
 }
