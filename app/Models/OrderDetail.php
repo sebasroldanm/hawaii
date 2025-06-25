@@ -10,10 +10,20 @@ class OrderDetail extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'order_id', 'product_id', 'quantity', 'unit_price',
-        'estimated_delivery_time', 'state',
-        'started_at', 'completed_at',
-        'note', 'customer_label',
+        'order_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'estimated_delivery_time',
+        'state',
+        'started_at',
+        'completed_at',
+        'note',
+        'customer_label',
+    ];
+
+    protected $attributes = [
+        'state' => 'queued',
     ];
 
     protected $casts = [

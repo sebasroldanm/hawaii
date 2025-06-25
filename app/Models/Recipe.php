@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Recipe extends Model
 {
     public $timestamps = false;
-    public $incrementing = false;
 
     protected $fillable = [
-        'composite_id', 'ingredient_id', 'quantity',
+        'composite_id',
+        'ingredient_id',
+        'quantity',
     ];
 
     protected $casts = [

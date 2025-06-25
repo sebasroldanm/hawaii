@@ -10,7 +10,17 @@ class Order extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'table_id', 'name', 'status', 'is_paid', 'started_at', 'completed_at',
+        'table_id',
+        'name',
+        'status',
+        'is_paid',
+        'started_at',
+        'completed_at',
+    ];
+
+    protected $attributes = [
+        'status' => 'pending',
+        'is_paid' => false,
     ];
 
     protected $casts = [

@@ -10,7 +10,10 @@ class Ingredient extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'stock', 'unit', 'low_stock_threshold',
+        'name',
+        'stock',
+        'unit',
+        'low_stock_threshold',
     ];
 
     protected $casts = [
@@ -20,7 +23,8 @@ class Ingredient extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'recipes', 'ingredient_id', 'composite_id')
-                    ->withPivot('quantity');
+        return $this->belongsToMany(Product::class, 'recipe')
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
 }
