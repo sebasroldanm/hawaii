@@ -10,6 +10,8 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components as Info;
 use App\Models\Table as TableModel;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -196,10 +198,71 @@ class OrderResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Info\Section::make('Order Information')
+                    ->columns(3)
+                    ->schema([
+                        Info\TextEntry::make('id')->label('Order #'),
+                        Info\TextEntry::make('name')->label('Name'),
+                        Info\TextEntry::make('table.title')->label('Table'),
+                        Info\TextEntry::make('status')->label('Status'),
+                        Info\TextEntry::make('is_paid')
+                            ->label('Paid')
+                            ->formatStateUsing(fn(bool $state) => $state ? 'Yes' : 'No'),
+                        Info\TextEntry::make('created_at')->label('Created At'),
+                    ]),
+
+                Info\Section::make('Order Timing')
+                    ->columns(2)
+                    ->schema([
+                        Info\TextEntry::make('started_at')->label('Started At'),
+                        Info\TextEntry::make('completed_at')->label('Completed At'),
+                    ]),
+
+                Info\Section::make('Ordered Products')
+                    ->schema([
+                        Info\RepeatableEntry::make('orderDetails')
+                            ->label('Products')
+                            ->columns(4)
+                            ->schema([
+                                Info\TextEntry::make('product.name')->label('Product'),
+                                Info\TextEntry::make('quantity'),
+                                Info\TextEntry::make('unit_price')->money('USD', true),
+                                Info\TextEntry::make('state')->label('State'),
+                                Info\TextEntry::make('started_at')->label('Started'),
+                                Info\TextEntry::make('completed_at')->label('Completed'),
+                                Info\TextEntry::make('note')->label('Note')->columnSpanFull(),
+                            ]),
+                    ]),
+
+                Info\Section::make('Summary')
+                    ->columns(2)
+                    ->schema([
+                        Info\TextEntry::make('order_total')
+                            ->label('Total')
+                            ->formatStateUsing(
+                                fn($record) =>
+                                '$' . number_format($record->orderDetails->sum(fn($d) => $d->unit_price * $d->quantity), 2)
+                            ),
+                        Info\TextEntry::make('estimated_time_total')
+                            ->label('Est. Prep Time')
+                            ->formatStateUsing(
+                                fn($record) =>
+                                $record->orderDetails->sum(fn($d) => $d->product->preparation_time) . ' min'
+                            ),
+                    ]),
+            ]);
+    }
+
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
@@ -207,6 +270,7 @@ class OrderResource extends Resource
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
+            'view' => Pages\ViewOrder::route('/{record}'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
